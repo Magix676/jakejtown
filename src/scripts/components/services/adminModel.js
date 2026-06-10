@@ -520,7 +520,7 @@ let AdminModel = class AdminModel {
         const count = this.events.reduce((sum, e) => sum + (e.deleted ? 0 : 1), 0);
         const inred = this.events.reduce((sum, e) => sum + ((!e.deleted && e.count > 9) ? 1 : 0), 0);
         const flag = this.isLowDiskSpace || this.isLowMemory || this.isOldCertificate || this.isOldPatreon;
-        document.title = `${ponies} | ${count}${lodash_1.repeat('!', inred)}${flag ? ' 🚩' : ''}${!this.connected ? ' ⚠' : ''} | Pony Town`;
+        document.title = `${ponies} | ${count}${lodash_1.repeat('!', inred)}${flag ? ' 🚩' : ''}${!this.connected ? ' ⚠' : ''} | Jakej Pony Town`;
     }
     notify(title, body) {
         if (this.notifications && notification.permission === 'granted') {

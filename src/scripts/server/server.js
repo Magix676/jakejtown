@@ -12,6 +12,8 @@ const serveFavicon = require("serve-favicon");
 const Rollbar = require("rollbar");
 const passport = require("passport");
 const connectMongo = require("connect-mongo");
+const pg = require("pg");
+const connectPgSimple = require("connect-pg-simple");
 const express = require("express");
 // import { WebSocketServer } from '@clusterws/cws';
 const clusterws_uws_1 = require("clusterws-uws");
@@ -67,7 +69,9 @@ mongoose.connect(config_1.config.db, {
     useCreateIndex: true,
     useFindAndModify: false,
 });
+const pgPool = config_1.config.pg ? new pg.Pool(config_1.config.pg) : undefined;
 const MongoStore = connectMongo(expressSession);
+const PgStore = connectPgSimple(expressSession);
 const app = express();
 const production = app.get('env') === 'production';
 const maxAge = production ? constants_1.YEAR : 0;
@@ -168,7 +172,7 @@ const createSession = () => expressSession({
     cookie: {
         maxAge: constants_1.WEEK * 2,
     },
-    store: new MongoStore({ mongooseConnection: mongoose.connection }),
+    store: config_1.config.pg && pgPool ? new PgStore({ pool: pgPool, tableName: 'session' }) : new MongoStore({ mongooseConnection: mongoose.connection }),
 });
 const statsPath = paths_1.pathTo('logs', `stats-${config_1.server.id}.csv`);
 const stats = new stats_1.StatsTracker(statsPath);

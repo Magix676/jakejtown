@@ -10,6 +10,9 @@
 	"secret": "gfhfdshtrdhgedryhe4t3y5uwjthr",
 	"token": "sdlfgihsdor8ghor8dgdrgdegrdg",
 	"db": "mongodb://<username>:<password>@localhost:27017/<database_name>",
+	"pg": {
+		"connectionString": "postgres://<username>:<password>@<host>:5432/<database_name>"
+	},
 	"oauth": {
 		"google": {
 			"clientID": "<CLIENT_ID_HERE>",

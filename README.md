@@ -1,4 +1,4 @@
-# Pony Town
+# Jakej Pony Town
 
 A game of ponies building a town
 
@@ -6,7 +6,7 @@ A game of ponies building a town
 
 * [Node.js](https://nodejs.org/download/release/v9.11.2/) (version 9)
 * gulp `npm install -g gulp`
-* MongoDB: [download link](https://www.mongodb.com/download-center/community) and [installation instructions](https://docs.mongodb.com/manual/administration/install-community/)
+* PostgreSQL: remote Postgres connection is supported for session storage via the `pg` config section
 * [ImageMagick](https://imagemagick.org/script/download.php#windows) (optional, required for generating preview gifs in animation tool)
 
 ## Installation
@@ -17,22 +17,15 @@ npm install
 
 ## Setting up Database
 
-- Install MongoDB
-- Start `mongo` from command line (you may need to go to `C:\Program Files\MongoDB\Server\4.0\bin` path on windows to run the command)
-- Type `use your_database_name` to create database
-- Type `db.new_collection.insert({ some_key: "some_value" })` to initialize database
-- Type
-  ```javascript
-  db.createUser(
-    {
-      user: "your_username",
-      pwd: "your_password",
-      roles: [ { role: "readWrite", db: "your_database_name" } ]
-    }
-  )
+- Use a remote PostgreSQL instance for session storage.
+- Set `pg.connectionString` in `config.json`, for example:
+  ```json
+  "pg": {
+    "connectionString": "postgres://<username>:<password>@<host>:5432/<database_name>"
+  }
   ```
-  to create database user.
-- Type `quit()` to exit mongo
+- The application will use PostgreSQL for session storage when the `pg` section is present.
+- If MongoDB is still configured under `db`, it remains available as a fallback for the existing application data layer.
 
 ## Setting up OAuth keys
 
@@ -117,7 +110,7 @@ Add `config.json` file in root directory with following content. You can use `co
 
 ```javascript
 {
-  "title": "Pony Town",
+  "title": "Jakej Pony Town",
   "twitterLink": "https://twitter.com/<twitter_name>", // optional
   "contactEmail": "<your_contact_email>",
   "port": 8090,
@@ -127,7 +120,10 @@ Add `config.json` file in root directory with following content. You can use `co
 	"adminLocal": "localhost:8091",
   "secret": "<some_random_string_here>",
   "token": "<some_random_string_here>",
-  "db": "mongodb://<username>:<password>@localhost:27017/<database_name>", // use values you used when setting up database
+  "pg": {
+    "connectionString": "postgres://<username>:<password>@<host>:5432/<database_name>"
+  },
+  "db": "mongodb://<username>:<password>@localhost:27017/<database_name>",
   "analytics": { // optional google analytics
     "trackingID": "<tracking_id>"
   },

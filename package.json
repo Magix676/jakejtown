@@ -115,6 +115,8 @@
     "clusterws-uws": "^0.4.6",
     "color-convert": "^2.0.1",
     "connect-mongo": "^3.0.0",
+    "connect-pg-simple": "^6.2.2",
+    "pg": "^7.18.3",
     "cookie-parser": "^1.4.4",
     "core-js": "^3.2.1",
     "del": "^5.1.0",

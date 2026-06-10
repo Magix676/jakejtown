@@ -10,6 +10,8 @@ import * as serveFavicon from 'serve-favicon';
 import * as Rollbar from 'rollbar';
 import * as passport from 'passport';
 import * as connectMongo from 'connect-mongo';
+const pg: any = require('pg');
+const connectPgSimple: any = require('connect-pg-simple');
 import * as express from 'express';
 // import { WebSocketServer } from '@clusterws/cws';
 import { WebSocketServer } from 'clusterws-uws';
@@ -75,7 +77,9 @@ mongoose.connect(config.db, {
 	useFindAndModify: false,
 });
 
+const pgPool = config.pg ? new pg.Pool(config.pg) : undefined;
 const MongoStore = connectMongo(expressSession);
+const PgStore = connectPgSimple(expressSession);
 const app = express();
 const production = app.get('env') === 'production';
 const maxAge = production ? YEAR : 0;
@@ -198,7 +202,7 @@ const createSession = () => expressSession({
 	cookie: {
 		maxAge: WEEK * 2,
 	},
-	store: new MongoStore({ mongooseConnection: mongoose.connection }),
+	store: config.pg && pgPool ? new PgStore({ pool: pgPool, tableName: 'session' }) : new MongoStore({ mongooseConnection: mongoose.connection }),
 });
 
 const statsPath = pathTo('logs', `stats-${server.id}.csv`);
